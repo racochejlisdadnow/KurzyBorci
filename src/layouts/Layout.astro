@@ -49,11 +49,11 @@ const {
 
     <Navigation />
 
-    <main class="flex-1 flex flex-col p-6 lg:p-[48px_72px_64px_24px]">
+    <main class="flex-1 flex flex-col p-6 lg:p-[48px_72px_64px_24px] isolate">
       <div class="flex-1 animate-fade-up">
         <slot />
       </div>
-      <Footer class="relative z-10" />
+      <Footer />
     </main>
   </body>
 </html>
