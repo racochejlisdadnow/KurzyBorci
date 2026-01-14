@@ -1,0 +1,133 @@
+---
+const { pathname } = Astro.url;
+
+const links = [
+  { href: "/KurzyBorci/", label: "Domašov", exact: true },
+  { href: "/KurzyBorci/courses", label: "Kurzy" },
+  { href: "/KurzyBorci/about", label: "Kdo jsme" },
+  { href: "/KurzyBorci/reviews", label: "Řiká se o nás" },
+  { href: "/KurzyBorci/contact", label: "Ozvi se" },
+  { href: "/KurzyBorci/faq", label: "FAQ" },
+];
+
+const isActive = (href: string, exact = false) => {
+  // Handle the root path /KurzyBorci/ which might be rendered as /KurzyBorci/index.html or just /KurzyBorci/
+  const normalizedPath =
+    pathname.replace(/\/$/, "").replace(/\/index\.html$/, "") || "/KurzyBorci";
+  const normalizedHref = href.replace(/\/$/, "");
+
+  if (exact) {
+    return normalizedPath === normalizedHref;
+  }
+  return normalizedPath.startsWith(normalizedHref);
+};
+---
+
+<!-- Mobile Navigation -->
+<div class="lg:hidden">
+  <!-- Top Bar -->
+  <div
+    class="fixed top-4 left-4 right-4 z-50 flex justify-between items-center bg-white/65 backdrop-blur-md p-4 rounded-[20px] shadow-nav transition-all duration-300"
+  >
+    <a
+      class="font-display text-[22px] text-navy no-underline"
+      href="/KurzyBorci/">KPB</a
+    >
+    <button
+      id="burger-btn"
+      class="flex flex-col justify-center gap-1.5 p-2 w-10 h-10 border-0 bg-transparent cursor-pointer group"
+      aria-label="Menu"
+      aria-expanded="false"
+    >
+      <span
+        class="burger-line w-6 h-0.5 bg-navy transition-all duration-300 origin-center group-aria-expanded:rotate-45 group-aria-expanded:translate-y-2"
+      ></span>
+      <span
+        class="burger-line w-6 h-0.5 bg-navy transition-all duration-300 origin-center group-aria-expanded:opacity-0"
+      ></span>
+      <span
+        class="burger-line w-6 h-0.5 bg-navy transition-all duration-300 origin-center group-aria-expanded:-rotate-45 group-aria-expanded:-translate-y-2"
+      ></span>
+    </button>
+  </div>
+
+  <!-- Fullscreen Menu Overlay -->
+  <nav
+    id="mobile-menu"
+    class="fixed inset-0 z-40 bg-white/90 backdrop-blur-xl flex flex-col justify-center items-center gap-8 opacity-0 pointer-events-none transition-all duration-500 translate-y-4 data-[open]:opacity-100 data-[open]:pointer-events-auto data-[open]:translate-y-0"
+  >
+    {
+      links.map((link) => (
+        <a
+          class:list={[
+            "text-3xl font-display text-navy no-underline transition-all duration-300 hover:text-magenta hover:scale-110",
+            { "text-magenta": isActive(link.href, link.exact) },
+          ]}
+          href={link.href}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <!-- Spacer to prevent content hiding behind fixed header -->
+  <div class="h-24"></div>
+</div>
+
+<!-- Desktop Navigation (Sidebar) -->
+<header class="hidden lg:block w-[240px] p-8 h-screen sticky top-0 shrink-0">
+  <nav
+    class="sticky top-6 flex flex-col gap-3 bg-white/65 rounded-[20px] p-5 shadow-card backdrop-blur-md"
+    aria-label="Primary"
+  >
+    <a
+      class="font-display text-[26px] no-underline text-navy pb-2 border-b-[3px] border-navy/20 mb-2 text-left"
+      href="/KurzyBorci/">KPB</a
+    >
+
+    {
+      links.map((link) => (
+        <a
+          class:list={[
+            "nav-link text-ink px-3.5 py-3 rounded-[14px] bg-white border-2 border-transparent font-semibold transition-all duration-200 hover:translate-x-1 hover:border-magenta hover:shadow-nav block text-left",
+            { "border-navy bg-[#f0e9ff]": isActive(link.href, link.exact) },
+          ]}
+          href={link.href}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>
+
+<script>
+  const burgerBtn = document.getElementById("burger-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const navLinks = mobileMenu?.querySelectorAll("a");
+
+  if (burgerBtn && mobileMenu) {
+    burgerBtn.addEventListener("click", () => {
+      const isExpanded = burgerBtn.getAttribute("aria-expanded") === "true";
+      burgerBtn.setAttribute("aria-expanded", (!isExpanded).toString());
+
+      if (!isExpanded) {
+        mobileMenu.setAttribute("data-open", "");
+        document.body.style.overflow = "hidden"; // Lock scroll
+      } else {
+        mobileMenu.removeAttribute("data-open");
+        document.body.style.overflow = ""; // Unlock scroll
+      }
+    });
+
+    // Close menu when clicking a link
+    navLinks?.forEach((link) => {
+      link.addEventListener("click", () => {
+        burgerBtn.setAttribute("aria-expanded", "false");
+        mobileMenu.removeAttribute("data-open");
+        document.body.style.overflow = "";
+      });
+    });
+  }
+</script>

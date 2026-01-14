@@ -1,0 +1,73 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Kurzy pro borce | Courses">
+  <section class="max-w-[720px] mb-8">
+    <h1
+      class="font-display text-[clamp(36px,5vw,64px)] m-[8px_0_12px] text-navy"
+    >
+      Kurzy pro borce
+    </h1>
+    <p class="text-lg leading-relaxed">
+      Vyber si zážitek. Každý kurz ma vlastni přibeh a odhalení.
+    </p>
+  </section>
+
+  <section class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5">
+    <!-- Course 1 -->
+    <a
+      class="group bg-white/85 rounded-[20px] p-[22px] shadow-card no-underline text-inherit border-2 border-transparent transition-all duration-200 flex flex-col hover:-translate-y-1 hover:border-sky focus:-translate-y-1 focus:border-sky"
+      href="/KurzyBorci/courses/detail-1"
+    >
+      <h2 class="text-xl font-bold mb-2">Dokonalé aaaah</h2>
+      <p class="mb-4">
+        Každé sednutí i zvednutí doprovází krása citoslovce aaaah, jen to není
+        ono? U nás se to naučíš.
+      </p>
+      <div class="mt-auto flex justify-between items-center gap-3">
+        <span
+          class="inline-flex self-start px-3 py-1.5 rounded-full bg-sun/25 text-navy font-semibold"
+          >2990 Kč</span
+        >
+        <span class="font-semibold text-navy">Zobrazit detail</span>
+      </div>
+    </a>
+
+    <!-- Course 2 -->
+    <a
+      class="group bg-white/85 rounded-[20px] p-[22px] shadow-card no-underline text-inherit border-2 border-transparent transition-transform transition-colors duration-200 flex flex-col hover:-translate-y-1 hover:border-sky focus:-translate-y-1 focus:border-sky"
+      href="/KurzyBorci/courses/detail-2"
+    >
+      <h2 class="text-xl font-bold mb-2">Mistr lamentování</h2>
+      <p class="mb-4">
+        Rád začínáš větu slovy "Jó to tenkrát", ale publikum ti uteče? Nic se
+        neboj, to spravíme.
+      </p>
+      <div class="mt-auto flex justify-between items-center gap-3">
+        <span
+          class="inline-flex self-start px-3 py-1.5 rounded-full bg-sun/25 text-navy font-semibold"
+          >2990 Kč</span
+        >
+        <span class="font-semibold text-navy">Zobrazit detail</span>
+      </div>
+    </a>
+
+    <!-- Course 3 -->
+    <a
+      class="group bg-white/85 rounded-[20px] p-[22px] shadow-card no-underline text-inherit border-2 border-transparent transition-all duration-200 flex flex-col hover:-translate-y-1 hover:border-sky focus:-translate-y-1 focus:border-sky"
+      href="/KurzyBorci/courses/detail-3"
+    >
+      <h2 class="text-xl font-bold mb-2">DABL+</h2>
+      <p>Dokonalé aaaah + Mistr lamentování</p>
+      <p class="mb-4 font-bold text-magenta">+ BONUS!!</p>
+      <div class="mt-auto flex justify-between items-center gap-3">
+        <span
+          class="inline-flex self-start px-3 py-1.5 rounded-full bg-sun/25 text-navy font-semibold"
+          >4990 Kč</span
+        >
+        <span class="font-semibold text-navy">Zobrazit detail</span>
+      </div>
+    </a>
+  </section>
+</Layout>

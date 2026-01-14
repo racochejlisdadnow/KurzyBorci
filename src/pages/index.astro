@@ -1,0 +1,34 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Kurzy pro borce | Home">
+  <section class="mt-10 max-w-[700px]">
+    <p class="uppercase tracking-[0.2em] text-xs font-semibold mb-3">
+      Zažitky, na ktere se nezapomina
+    </p>
+    <h1
+      class="font-display text-[clamp(48px,7vw,96px)] m-[12px_0_16px] text-navy text-shadow-hero leading-tight"
+    >
+      Kurzy pro borce
+    </h1>
+    <p class="text-lg leading-relaxed max-w-[560px] mb-7">
+      Už máme něco za sebou. Jsme Borci. Ty nejspíš taky. Stav se za nama a bude
+      z tebe pořádné Borec!
+    </p>
+    <div class="flex flex-wrap gap-4 mt-7">
+      <a class="btn btn-primary" href="/KurzyBorci/courses">Prohlidnout kurzy</a
+      >
+      <a class="btn btn-ghost" href="/KurzyBorci/contact">Napiš nam</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .text-shadow-hero {
+    text-shadow:
+      4px 4px 0 #ffffff,
+      8px 8px 0 rgba(240, 57, 140, 0.6),
+      12px 12px 0 rgba(60, 199, 243, 0.6);
+  }
+</style>
