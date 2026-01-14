@@ -210,11 +210,17 @@ body {
   box-shadow: var(--shadow);
 }
 
+.text-panel {
+  margin-bottom: 16px;
+}
+
 .course-card {
   text-decoration: none;
   color: inherit;
   border: 2px solid transparent;
   transition: transform 0.2s ease, border 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .course-card:hover,
@@ -228,6 +234,29 @@ body {
   display: inline-block;
   font-weight: 600;
   color: var(--navy);
+}
+
+.price-tag {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 190, 61, 0.25);
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.price-row {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.course-card .card-link {
+  margin-top: 0;
+  font-weight: 600;
 }
 
 .detail-hero {
