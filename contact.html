@@ -25,6 +25,7 @@
         <a class="nav-link" href="about.html">Kdo jsme</a>
         <a class="nav-link" href="reviews.html">Řiká se o nas</a>
         <a class="nav-link is-active" href="contact.html">Ozvi se</a>
+        <a class="nav-link" href="faq.html">FAQ</a>
       </nav>
     </header>
 
@@ -33,7 +34,7 @@
       <section class="page-hero">
         <h1 class="page-title">Kontaktuj nas</h1>
         <p class="page-subtitle">
-          Placeholder text: odpovime co nejdrive a pripravime idealni termin.
+          Na kólu jsme furt, takže reakční doba je lepší jak u tvého vyčepáka.
         </p>
       </section>
 
@@ -41,20 +42,25 @@
       <section class="contact-grid">
         <div class="contact-panel">
           <h2>Kontakt</h2>
-          <p>Email: info@kurzyproborce.cz</p>
-          <p>Telefon: +420 123 456 789</p>
-          <p>Placeholder text: dostupnost dle dohody.</p>
+          <p>Email: kurzyproborce@gmail.com</p>
+          <p>Telefon: NEZVEDAME</p>
+          <p>Napiš si o ideální termin kurzu. Nejlip úterý bo čtvrtek.</p>
+            <p>Jesli si sám, přidáme tě k dalším borcům.</p>
+            <p>Nebo dojdite celá tlupa.</p>
+          </p>
         </div>
 
-        <form class="contact-form" action="#" method="post">
+        <form class="contact-form" action="https://formspree.io/f/xeeeojqe" method="post">
           <h2>Dotaz na kurz</h2>
+          <input type="hidden" name="_subject" value="Novy dotaz na kurz" />
+          <input type="hidden" name="_next" value="contact.html?thanks=1" />
           <label>
             Jmeno
-            <input type="text" name="name" placeholder="Tvoje jmeno" required />
+            <input type="text" name="name" placeholder="Tvoje ctěne jmeno" required />
           </label>
           <label>
             Email
-            <input type="email" name="email" placeholder="tvoje@email.cz" required />
+            <input type="email" name="email" placeholder="borec@email.cz" required />
           </label>
           <label>
             Zprava / termin
@@ -63,6 +69,21 @@
           <button class="btn btn-primary" type="submit">Odeslat</button>
         </form>
       </section>
+
+      <section class="thank-you" aria-live="polite" hidden>
+        <h2>Diky borce,</h2>
+        <p>jsi jeden krok od lepsiho zivota.</p>
+        <p>Brzy se ti ozveme.</p>
+        <p class="signature">Borci</p>
+      </section>
     </main>
+
+    <script>
+      const thanks = new URLSearchParams(window.location.search).get("thanks");
+      if (thanks === "1") {
+        const panel = document.querySelector(".thank-you");
+        if (panel) panel.hidden = false;
+      }
+    </script>
   </body>
 </html>
