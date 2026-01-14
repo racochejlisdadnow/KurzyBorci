@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1b142b;
+  --color-cream: #f7f2e8;
+  --color-sun: #ffbe3d;
+  --color-magenta: #f0398c;
+  --color-sky: #3cc7f3;
+  --color-leaf: #00c389;
+  --color-navy: #2a1a7a;
+
+  --font-display: "Bungee Shade", "Trebuchet MS", sans-serif;
+  --font-body: "Space Grotesk", "Trebuchet MS", sans-serif;
+
+  --radius-xl: 20px;
+
+  --shadow-card: 0 18px 40px rgba(27, 20, 43, 0.22);
+  --shadow-nav: 0 10px 18px rgba(240, 57, 140, 0.2);
+  --shadow-btn: 0 12px 20px rgba(42, 26, 122, 0.35);
+
+  --animate-fade-up: fadeUp 0.6s ease both;
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Custom Utilities based on legacy styles */
+@layer components {
+  .page {
+    @apply flex min-h-screen flex-col lg:flex-row;
+  }
+
+  .bg-burst {
+    @apply fixed inset-0 -z-10 pointer-events-none;
+    background-image: radial-gradient(
+        circle at 10% 10%,
+        rgba(240, 57, 140, 0.35),
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 90% 20%,
+        rgba(60, 199, 243, 0.35),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 30% 80%,
+        rgba(0, 195, 137, 0.35),
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 80% 85%,
+        rgba(255, 190, 61, 0.35),
+        transparent 50%
+      );
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3.5 rounded-2xl font-semibold no-underline border-2 border-transparent transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply bg-navy text-white shadow-btn hover:-translate-y-0.5 focus:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply bg-white/90 text-navy border-navy;
+  }
+}
+
+/* Base styles */
+body {
+  @apply m-0 font-body text-ink min-h-screen;
+  background: linear-gradient(135deg, #fef0c8 0%, #ffd1e6 40%, #c6f4ff 100%);
+}
