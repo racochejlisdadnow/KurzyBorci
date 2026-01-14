@@ -1,0 +1,93 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Kurzy pro borce | Contact Us">
+  <section class="max-w-[720px] mb-8">
+    <h1
+      class="font-display text-[clamp(36px,5vw,64px)] m-[8px_0_12px] text-navy"
+    >
+      Kontaktuj nas
+    </h1>
+    <p class="text-lg leading-relaxed">
+      Na kólu jsme furt, takže reakční doba je lepší jak u tvého vyčepáka.
+    </p>
+  </section>
+
+  <section
+    class="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6 items-start"
+  >
+    <div class="bg-white/85 rounded-[20px] p-[22px] shadow-card">
+      <h2 class="text-xl font-bold mb-4 text-navy">Kontakt</h2>
+      <p class="mb-2">Email: kurzyproborce@gmail.com</p>
+      <p class="mb-2">Telefon: NEZVEDAME</p>
+      <p class="mb-2">
+        Napiš si o ideální termin kurzu. Nejlip úterý bo čtvrtek.
+      </p>
+      <p class="mb-2">Jesli si sám, přidáme tě k dalším borcům.</p>
+      <p>Nebo dojdite celá tlupa.</p>
+    </div>
+
+    <form
+      class="bg-white/90 p-6 rounded-[20px] shadow-card grid gap-4"
+      action="https://formspree.io/f/xeeeojqe"
+      method="post"
+    >
+      <h2 class="text-xl font-bold text-navy">Dotaz na kurz</h2>
+      <input type="hidden" name="_subject" value="Novy dotaz na kurz" />
+      <input type="hidden" name="_next" value="/KurzyBorci/contact?thanks=1" />
+
+      <label class="grid gap-1.5 font-semibold">
+        Jmeno
+        <input
+          class="rounded-xl border-2 border-ink/15 p-[10px_12px] focus:outline-none focus:border-magenta"
+          type="text"
+          name="name"
+          placeholder="Tvoje ctěne jmeno"
+          required
+        />
+      </label>
+
+      <label class="grid gap-1.5 font-semibold">
+        Email
+        <input
+          class="rounded-xl border-2 border-ink/15 p-[10px_12px] focus:outline-none focus:border-magenta"
+          type="email"
+          name="email"
+          placeholder="borec@email.cz"
+          required
+        />
+      </label>
+
+      <label class="grid gap-1.5 font-semibold">
+        Zprava / termin
+        <textarea
+          class="rounded-xl border-2 border-ink/15 p-[10px_12px] focus:outline-none focus:border-magenta font-inherit"
+          name="message"
+          rows="5"
+          placeholder="Napis nam predstavu"
+          required></textarea>
+      </label>
+
+      <button class="btn btn-primary w-full" type="submit">Odeslat</button>
+    </form>
+  </section>
+
+  <section
+    id="thank-you"
+    class="mt-6 max-w-[520px] bg-white/85 rounded-[20px] p-[22px] shadow-card hidden"
+  >
+    <h2 class="mb-2 text-navy text-xl font-bold">Diky borce,</h2>
+    <p class="mb-1.5 leading-relaxed">jsi jeden krok od lepsiho zivota.</p>
+    <p class="mb-1.5 leading-relaxed">Brzy se ti ozveme.</p>
+    <p class="mt-3 font-semibold">Borci</p>
+  </section>
+</Layout>
+
+<script>
+  const thanks = new URLSearchParams(window.location.search).get("thanks");
+  if (thanks === "1") {
+    const panel = document.getElementById("thank-you");
+    if (panel) panel.classList.remove("hidden");
+  }
+</script>
