@@ -17,7 +17,7 @@ import Layout from "../../layouts/Layout.astro";
   <section
     class="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6 items-start"
   >
-    <div class="bg-white/85 rounded-[20px] p-[22px] shadow-card">
+    <div class="bg-white/85 rounded-xl p-[22px] shadow-card">
       <h2 class="text-xl font-bold mb-4 text-navy">Kontakt</h2>
       <p class="mb-2">
         Email:
@@ -37,13 +37,13 @@ import Layout from "../../layouts/Layout.astro";
     </div>
 
     <form
-      class="bg-white/90 p-6 rounded-[20px] shadow-card grid gap-4"
+      class="bg-white/90 p-6 rounded-xl shadow-card grid gap-4"
       action="https://formspree.io/f/xeeeojqe"
       method="post"
     >
       <h2 class="text-xl font-bold text-navy">Dotaz na kurz</h2>
       <input type="hidden" name="_subject" value="Novy dotaz na kurz" />
-      <input type="hidden" name="_next" value="/KurzyBorci/contact?thanks=1" />
+      <input type="hidden" name="_next" value="/contact?thanks=1" />
 
       <label class="grid gap-1.5 font-semibold">
         Jmeno
@@ -83,7 +83,7 @@ import Layout from "../../layouts/Layout.astro";
 
   <section
     id="thank-you"
-    class="mt-6 max-w-[520px] bg-white/85 rounded-[20px] p-[22px] shadow-card hidden"
+    class="mt-6 max-w-[520px] bg-white/85 rounded-xl p-[22px] shadow-card hidden"
   >
     <h2 class="mb-2 text-navy text-xl font-bold">Diky borce,</h2>
     <p class="mb-1.5 leading-relaxed">jsi jeden krok od lepsiho zivota.</p>

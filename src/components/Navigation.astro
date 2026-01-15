@@ -2,18 +2,18 @@
 const { pathname } = Astro.url;
 
 const links = [
-  { href: "/KurzyBorci/", label: "Domašov", exact: true },
-  { href: "/KurzyBorci/courses", label: "Kurzy" },
-  { href: "/KurzyBorci/about", label: "Kdo jsme" },
-  { href: "/KurzyBorci/reviews", label: "Řiká se o nás" },
-  { href: "/KurzyBorci/contact", label: "Ozvi se" },
-  { href: "/KurzyBorci/faq", label: "FAQ" },
+  { href: "/", label: "Domašov", exact: true },
+  { href: "/courses", label: "Kurzy" },
+  { href: "/about", label: "Kdo jsme" },
+  { href: "/reviews", label: "Řiká se o nás" },
+  { href: "/contact", label: "Ozvi se" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 const isActive = (href: string, exact = false) => {
-  // Handle the root path /KurzyBorci/ which might be rendered as /KurzyBorci/index.html or just /KurzyBorci/
+  // Handle the root path / which might be rendered as /index.html
   const normalizedPath =
-    pathname.replace(/\/$/, "").replace(/\/index\.html$/, "") || "/KurzyBorci";
+    pathname.replace(/\/$/, "").replace(/\/index\.html$/, "") || "/";
   const normalizedHref = href.replace(/\/$/, "");
 
   if (exact) {
@@ -27,12 +27,9 @@ const isActive = (href: string, exact = false) => {
 <div class="lg:hidden">
   <!-- Top Bar -->
   <div
-    class="fixed top-4 left-4 right-4 z-50 flex justify-between items-center bg-white/65 backdrop-blur-md p-4 rounded-[20px] shadow-nav transition-all duration-300"
+    class="fixed top-4 left-4 right-4 z-50 flex justify-between items-center bg-white/65 backdrop-blur-md p-4 rounded-xl shadow-nav transition-all duration-300"
   >
-    <a
-      class="font-display text-[22px] text-navy no-underline"
-      href="/KurzyBorci/">KPB</a
-    >
+    <a class="font-display text-[22px] text-navy no-underline" href="/">KPB</a>
     <button
       id="burger-btn"
       class="flex flex-col justify-center gap-1.5 p-2 w-10 h-10 border-0 bg-transparent cursor-pointer group"
@@ -54,7 +51,7 @@ const isActive = (href: string, exact = false) => {
   <!-- Fullscreen Menu Overlay -->
   <nav
     id="mobile-menu"
-    class="fixed inset-0 z-40 bg-white/90 backdrop-blur-xl flex flex-col justify-center items-center gap-8 opacity-0 pointer-events-none transition-all duration-500 translate-y-4 data-[open]:opacity-100 data-[open]:pointer-events-auto data-[open]:translate-y-0"
+    class="fixed inset-0 z-40 bg-white/90 backdrop-blur-xl flex flex-col justify-center items-center gap-8 opacity-0 pointer-events-none transition-all duration-500 translate-y-4 data-open:opacity-100 data-open:pointer-events-auto data-open:translate-y-0"
   >
     {
       links.map((link) => (
@@ -78,12 +75,12 @@ const isActive = (href: string, exact = false) => {
 <!-- Desktop Navigation (Sidebar) -->
 <header class="hidden lg:block w-[240px] p-8 h-screen sticky top-0 shrink-0">
   <nav
-    class="sticky top-6 flex flex-col gap-3 bg-white/65 rounded-[20px] p-5 shadow-card backdrop-blur-md"
+    class="sticky top-6 flex flex-col gap-3 bg-white/65 rounded-xl p-5 shadow-card backdrop-blur-md"
     aria-label="Primary"
   >
     <a
       class="font-display text-[26px] no-underline text-navy pb-2 border-b-[3px] border-navy/20 mb-2 text-left"
-      href="/KurzyBorci/">KPB</a
+      href="/">KPB</a
     >
 
     {

@@ -5,6 +5,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: "https://kurzyproborce.cz",
   base: "/",
+  output: "static",
+  build: {
+    inlineStylesheets: "auto",
+  },
   vite: {
     plugins: [tailwindcss()],
   },

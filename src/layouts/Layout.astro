@@ -25,36 +25,32 @@ const {
     <link
       rel="icon"
       type="image/png"
-      href="/KurzyBorci/favicons/favicon-96x96.png"
+      href="/favicons/favicon-96x96.png"
       sizes="96x96"
     />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="/KurzyBorci/favicons/favicon.svg"
-    />
-    <link rel="shortcut icon" href="/KurzyBorci/favicons/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/favicon.ico" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="/KurzyBorci/favicons/apple-touch-icon.png"
+      href="/favicons/apple-touch-icon.png"
     />
     <meta name="apple-mobile-web-app-title" content="Kurzy pro borce" />
-    <link rel="manifest" href="/KurzyBorci/manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/KurzyBorci/images/meta/meta.png" />
+    <meta property="og:image" content="/images/meta/meta.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/KurzyBorci/images/meta/meta.png" />
+    <meta property="twitter:image" content="/images/meta/meta.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -67,7 +63,7 @@ const {
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("/KurzyBorci/sw.js")
+            .register("/sw.js")
             .then((registration) => {
               console.log("SW registered: ", registration);
             })
