@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kvíz pro Borce | Kurzy Pro Borce</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Space+Grotesk:wght@400;600;700;800;900&display=swap');
+        :root {
+            --kpb-ink: #1b142b;
+            --kpb-sun: #ffbe3d;
+            --kpb-magenta: #f0398c;
+            --kpb-sky: #3cc7f3;
+            --kpb-navy: #2a1a7a;
+        }
+        body {
+            font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+            color: var(--kpb-ink);
+            background: linear-gradient(135deg, #fef0c8, #ffd1e6 40%, #c6f4ff);
+            -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-slide-up { opacity: 0; animation: slideUp 0.4s ease-out forwards; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .quiz-burst {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 10% 10%, #f0398c59, transparent 45%),
+                radial-gradient(circle at 90% 20%, #3cc7f359, transparent 40%),
+                radial-gradient(circle at 30% 80%, #00c38959, transparent 45%),
+                radial-gradient(circle at 80% 85%, #ffbe3d59, transparent 50%);
+        }
+        .quiz-shell {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(27, 20, 43, 0.22);
+        }
+        .quiz-inner {
+            padding: 2rem;
+        }
+        @media (max-width: 640px) {
+            .quiz-inner {
+                padding: 1.5rem;
+            }
+        }
+        .font-display-kpb {
+            font-family: 'Bungee Shade', 'Trebuchet MS', sans-serif;
+            color: var(--kpb-navy);
+        }
+        .text-shadow-kpb {
+            text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(240, 57, 140, 0.35), 9px 9px 0 rgba(60, 199, 243, 0.35);
+        }
+        .btn-primary-kpb {
+            background: var(--kpb-navy);
+            color: #fff;
+            box-shadow: 0 12px 20px rgba(42, 26, 122, 0.35);
+        }
+        .btn-primary-kpb:hover { transform: translateY(-2px); }
+        .quiz-progress-track {
+            background: rgba(42, 26, 122, 0.12);
+        }
+        .quiz-progress-fill {
+            background: linear-gradient(90deg, var(--kpb-magenta), var(--kpb-sky));
+            box-shadow: 0 2px 10px rgba(240, 57, 140, 0.35);
+        }
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(42, 26, 122, 0.16);
+            box-shadow: 0 6px 14px rgba(27, 20, 43, 0.06);
+        }
+        .quiz-option:hover {
+            transform: translateX(3px);
+            box-shadow: 0 10px 18px rgba(240, 57, 140, 0.18);
+        }
+        .quiz-pill {
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(8px);
+        }
+        .kpb-favicon-text {
+            font-family: 'Bungee Shade', 'Trebuchet MS', sans-serif;
+            font-size: 3.2rem;
+            line-height: 1;
+            letter-spacing: 0.03em;
+            color: var(--kpb-navy);
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8), 4px 4px 0 rgba(240, 57, 140, 0.35);
+        }
+        .quiz-quote {
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: inset 0 0 0 1px rgba(42, 26, 122, 0.08);
+        }
+        .text-slate-900 { color: var(--kpb-navy) !important; }
+        .text-slate-800, .text-slate-700 { color: var(--kpb-ink) !important; }
+        .text-slate-500, .text-slate-400 { color: rgba(27, 20, 43, 0.7) !important; }
+        .bg-slate-50 { background-color: rgba(255, 255, 255, 0.7) !important; }
+        .bg-slate-100, .border-slate-100 { border-color: rgba(42, 26, 122, 0.16) !important; background-color: rgba(255, 255, 255, 0.7) !important; }
+        .bg-slate-900 { background-color: var(--kpb-navy) !important; }
+        .text-orange-500 { color: var(--kpb-magenta) !important; }
+        .bg-orange-500, .hover\:bg-orange-600:hover { background-color: var(--kpb-navy) !important; }
+        .border-orange-500, .hover\:border-orange-500:hover { border-color: var(--kpb-magenta) !important; }
+        .hover\:bg-orange-50:hover { background-color: rgba(240, 57, 140, 0.08) !important; }
+        .focus\:border-orange-500:focus { border-color: var(--kpb-sky) !important; }
+        .focus\:ring-orange-500:focus { --tw-ring-color: var(--kpb-magenta) !important; }
+        .text-yellow-500 { color: var(--kpb-sun) !important; }
+        .text-blue-500 { color: var(--kpb-sky) !important; }
+        .text-purple-500 { color: var(--kpb-magenta) !important; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Ikony pomocí SVG (náhrada za Lucide komponenty pro single-file stabilitu)
+        const Icon = ({ name, className }) => {
+            const icons = {
+                compass: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
+                chevronRight: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>,
+                loader: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className + " animate-spin"}><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>,
+                trophy: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
+                coffee: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>,
+                target: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+                mail: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+                check: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            };
+            return icons[name] || null;
+        };
+
+        const QUESTIONS = [
+            { id: 1, text: "V aktuální fázi života si se sebou:", options: [
+                { text: "velmi spokojený", category: "ALFA" }, { text: "spokojený", category: "ZEN" },
+                { text: "nestěžuju si", category: "SEEKER" }, { text: "stojí to za hovno", category: "SEEKER" }
+            ]},
+            { id: 2, text: "Kdybys mohl bez následků změnit něco ve svém životě:", options: [
+                { text: "udělal bych to hned", category: "SEEKER" }, { text: "nemám co měnit, su spoko borec", category: "ZEN" },
+                { text: "jak bez následků?", category: "HUSTLER" }, { text: "už se vidím na Bali", category: "ZEN" }
+            ]},
+            { id: 3, text: "Dřina a krupica nebo pohodička?", options: [
+                { text: "hlavně pohodička", category: "ZEN" }, { text: "za tu dřinu mám pohodičku", category: "ALFA" },
+                { text: "krupica není všechno", category: "SEEKER" }, { text: "já makám furt", category: "HUSTLER" }
+            ]},
+            { id: 4, text: "Pátek večer. Co se děje?", options: [
+                { text: "Jdu s chlapama na pivo, klasika, vypnout hlavu.", category: "ZEN" },
+                { text: "Plánuju další kroky nebo makám na svým projektu.", category: "HUSTLER" },
+                { text: "Sport, fitko, chci se zničit a pak si dát steak.", category: "ALFA" },
+                { text: "Přemýšlím u Netflixu, jestli tenhle týden za něco stál.", category: "SEEKER" }
+            ]},
+            { id: 5, text: "Jak reaguješ, když se něco totálně posere?", options: [
+                { text: "Nadechnu se a jdu to řešit, od toho tu přece jsem.", category: "ALFA" },
+                { text: "Zanadávám si, ale svět se nezboří, jedeme dál.", category: "ZEN" },
+                { text: "Hledám kličku, jak z toho vybruslit s co nejmenší ztrátou krupice.", category: "HUSTLER" },
+                { text: "Stáhne mě to dolů a chvíli se v tom nepříjemně plácám.", category: "SEEKER" }
+            ]},
+            { id: 6, text: "Co pro tebe reálně znamená 'úspěch'?", options: [
+                { text: "Svoboda dělat si co chci a kdy chci.", category: "ZEN" },
+                { text: "Mít respekt ostatních a zanechat tu po sobě stopu.", category: "ALFA" },
+                { text: "Pořádnej obnos na účtu, krupica řeší problémy.", category: "HUSTLER" },
+                { text: "Najít vnitřní klid a vědět, že to, co dělám, má smysl.", category: "SEEKER" }
+            ]},
+            { id: 7, text: "Když se podíváš ráno do zrcadla, koho vidíš?", options: [
+                { text: "Zvíře, co je připravený urvat další den.", category: "ALFA" },
+                { text: "Normálního borce, co má svý mouchy, ale má se rád.", category: "ZEN" },
+                { text: "Chlapa, co na sobě musí ještě sakra makat.", category: "HUSTLER" },
+                { text: "Zatím tak trochu cizince, se kterým se snažím skámošit.", category: "SEEKER" }
+            ]},
+            { id: 8, text: "Když ti někdo nabídne pomocnou ruku:", options: [
+                { text: "Rád přijmu, každý občas potřebuje píchnout.", category: "ZEN" },
+                { text: "Díky, ale zvládnu to sám. Spoléhám na sebe.", category: "ALFA" },
+                { text: "Hned přemýšlím, co za to ten člověk bude chtít.", category: "HUSTLER" },
+                { text: "Konečně si někdo všiml, že bych něco potřeboval.", category: "SEEKER" }
+            ]},
+            { id: 9, text: "Vztahy s ženskýma (případně s partnerkou) máš momentálně:", options: [
+                { text: "Já vedu, ona mě doplňuje, respektujeme se.", category: "ALFA" },
+                { text: "Mám to srovnaný, je to prostě v klidu a bez dramat.", category: "ZEN" },
+                { text: "Teď na to není úplně čas, fokus je na budování mýho impéria.", category: "HUSTLER" },
+                { text: "Je to dost složitý, pořád v tom něco hledám a řeším.", category: "SEEKER" }
+            ]},
+            { id: 10, text: "Představ si ideální dovolenou:", options: [
+                { text: "Aktivní expedice, hory, překonávání limitů.", category: "ALFA" },
+                { text: "Dobře se najíst, vyspat se a nic neřešit.", category: "ZEN" },
+                { text: "I tam sem tam mrknu do mailu, byznys nespí.", category: "HUSTLER" },
+                { text: "Někam zmizet sám a srovnat si myšlenky v hlavě.", category: "SEEKER" }
+            ]},
+            { id: 11, text: "Jak to vidíš se šroplama (dětma)?", options: [
+                { text: "mám a cajk", category: "ZEN" }, { text: "nemám a chcu", category: "ALFA" },
+                { text: "nemam a neplanuju", category: "HUSTLER" }, { text: "mam a je to peklo", category: "SEEKER" }
+            ]},
+            { id: 12, text: "Když přijde na výchovu a fungování rodiny:", options: [
+                { text: "Jsem pevný bod. Jasný pravidla a mantinely.", category: "ALFA" },
+                { text: "Hlavně ať je sranda a klid, nehrotím každou blbost.", category: "ZEN" },
+                { text: "Snažím se rodinu hlavně kvalitně zabezpečit.", category: "HUSTLER" },
+                { text: "Dělám co můžu, ale často pochybuju.", category: "SEEKER" }
+            ]},
+            { id: 13, text: "Jak jsi na tom se svou tělesnou schránkou?", options: [
+                { text: "Stroj. Makám, zvedám, potím krev.", category: "ALFA" },
+                { text: "Na pohodu. Hejbnu se, ale pivo si neodpustím.", category: "ZEN" },
+                { text: "Teď na to není čas, byznys má přednost.", category: "HUSTLER" },
+                { text: "Vím, že bych měl začít makat, ale odkládám to.", category: "SEEKER" }
+            ]},
+            { id: 14, text: "Když na tebe v hospodě začne někdo vyskakovat:", options: [
+                { text: "Narovnám se a dám mu jasně najevo, ať brzdí.", category: "ALFA" },
+                { text: "Zasměju se a jdu pryč, nebudu ztrácet energii.", category: "ZEN" },
+                { text: "Vyhodnotím situaci – zbytečnej problém, ignoruju.", category: "HUSTLER" },
+                { text: "Zaskočí mě to a pak si přehrávám, co jsem měl říct.", category: "SEEKER" }
+            ]},
+            { id: 15, text: "Za co s radostí utratíš pořádnej balík?", options: [
+                { text: "Statusový věci, auta nebo prémiový zážitky.", category: "ALFA" },
+                { text: "Dobrý jídlo, pití, dovolená a kvalitní gril.", category: "ZEN" },
+                { text: "Investice, krypto, cokoliv, co udělá krupicu.", category: "HUSTLER" },
+                { text: "Kurzy, terapie, knížky – snaha se posunout.", category: "SEEKER" }
+            ]},
+            { id: 16, text: "Jak vnímáš riskování?", options: [
+                { text: "Kdo neriskuje, nevyhrává. Nutnost k růstu.", category: "ALFA" },
+                { text: "Zbytečný nervy, radši vrabec v hrsti.", category: "ZEN" },
+                { text: "Rovnice rizika a zisku. Když dává smysl, jdu.", category: "HUSTLER" },
+                { text: "Mám z něj strach, ale štve mě, že mě brzdí.", category: "SEEKER" }
+            ]},
+            { id: 17, text: "Když se podíváš na okruh svých přátel:", options: [
+                { text: "Jsem ten, kdo to vede a koho respektují.", category: "ALFA" },
+                { text: "Mám partu, se kterou je prostě dobře.", category: "ZEN" },
+                { text: "Networkuju. Lidi musí mít taky tah na branku.", category: "HUSTLER" },
+                { text: "Někdy si připadám trochu osaměle.", category: "SEEKER" }
+            ]},
+            { id: 18, text: "Tvoje rána vypadají zhruba takhle:", options: [
+                { text: "Budíček brzy, studená sprcha, akce.", category: "ALFA" },
+                { text: "Káva v klidu, nikam se neženu.", category: "ZEN" },
+                { text: "Hned beru mobil a kontroluju byznys.", category: "HUSTLER" },
+                { text: "Pětkrát posunu budík a bojuju se vstáváním.", category: "SEEKER" }
+            ]},
+            { id: 19, text: "Když se ohlédneš za největšími průsery:", options: [
+                { text: "Byla to tvrdá lekce. Nelituju.", category: "ALFA" },
+                { text: "Stalo se, život jde dál, neřeším.", category: "ZEN" },
+                { text: "Drahá ztráta krupice. Už se to nesmí stát.", category: "HUSTLER" },
+                { text: "Pořád to ve mně hlodá a bojím se opakování.", category: "SEEKER" }
+            ]},
+            { id: 20, type: "freetext", text: "Co bys na sobě chtěl do roka nejvíc zlepit?" }
+        ];
+
+        const RESULTS = {
+            ALFA: { title: "Tahoun a Lídr", icon: "trophy", color: "text-yellow-500", text: "Jsi rozený lídr a tahoun, co se nebojí vzít odpovědnost na svý triko a urvat si to svoje. Někdy bys ale mohl trochu zvolnit. Lidi kolem tebe tě respektují, tak si toho važ." },
+            ZEN: { title: "Vyrovnaný Pohodář", icon: "coffee", color: "text-blue-500", text: "Ty máš život už docela slušně na háku a umíš si vychutnat pohodičku. Je skvělý, že se nenecháš stresovat blbostma. Možná by ale stálo za to občas zariskovat." },
+            HUSTLER: { title: "Nezastavitelný Dříč", icon: "target", color: "text-orange-500", text: "Krupica, výkon a neustálý posun vpřed, to je tvoje palivo. Bacha ale na to, abys v tomhle nekonečným sprintu nezapomněl taky žít." },
+            SEEKER: { title: "Hledající Bojovník", icon: "compass", color: "text-purple-500", text: "Momentálně jsi ve fázi, kdy tak trochu hledáš kudy dál, a víš co? To je u pořádnýho chlapa naprosto normální. Máš v sobě obrovskej potenciál." }
+        };
+
+        function App() {
+            const [step, setStep] = useState('intro');
+            const [currentQ, setCurrentQ] = useState(0);
+            const [answers, setAnswers] = useState([]);
+            const [freeText, setFreeText] = useState("");
+            const [timeLeft, setTimeLeft] = useState(30);
+            const [profile, setProfile] = useState(null);
+            const [email, setEmail] = useState('');
+            const [done, setDone] = useState(false);
+
+            useEffect(() => {
+                if (step === 'loading' && timeLeft > 0) {
+                    const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+                    return () => clearTimeout(timer);
+                } else if (step === 'loading' && timeLeft === 0) {
+                    setStep('result');
+                }
+            }, [timeLeft, step]);
+
+            const handleAnswer = (cat) => {
+                const newAns = [...answers, cat];
+                setAnswers(newAns);
+                if (currentQ < QUESTIONS.length - 1) {
+                    setCurrentQ(currentQ + 1);
+                } else {
+                    const counts = newAns.filter(c => c !== 'FREETEXT').reduce((a, b) => (a[b] = (a[b] || 0) + 1, a), {});
+                    const dominant = Object.entries(counts).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+                    setProfile(RESULTS[dominant]);
+                    setStep('loading');
+                }
+            };
+
+            return (
+                <div className="min-h-screen flex items-center justify-center p-0 sm:p-4 relative">
+                    <div className="quiz-burst" aria-hidden="true"></div>
+                    <div className="quiz-shell w-full max-w-md sm:rounded-[2.5rem] h-screen sm:h-[800px] flex flex-col overflow-hidden relative">
+                        
+                        {step === 'intro' && (
+                            <div className="quiz-inner flex-1 flex flex-col items-center justify-center text-center animate-fade-in">
+                                <div className="mb-8">
+                                    <span className="kpb-favicon-text">KPB</span>
+                                </div>
+                                <h1 className="font-display-kpb text-shadow-kpb text-4xl font-black text-slate-900 mb-4 tracking-tight">Kvíz pro Borce</h1>
+                                <p className="text-slate-500 mb-10 text-lg leading-relaxed">Zjisti, jaký jsi archetyp. 20 otázek ze života. Žádný sračky.</p>
+                                <button onClick={() => setStep('quiz')} className="btn-primary-kpb w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center text-xl transition-all active:scale-95">
+                                    Spustit test <Icon name="chevronRight" className="ml-2 w-6 h-6" />
+                                </button>
+                            </div>
+                        )}
+
+                        {step === 'quiz' && (
+                            <div className="flex-1 flex flex-col animate-fade-in">
+                                <div className="quiz-progress-track h-1.5 bg-slate-100"><div className="quiz-progress-fill h-full bg-orange-500 transition-all duration-500" style={{width: `${(currentQ/QUESTIONS.length)*100}%`}}></div></div>
+                                <div className="quiz-inner flex-1 flex flex-col">
+                                    <span className="text-slate-400 font-bold text-xs uppercase tracking-widest mb-2">Otázka {currentQ + 1} / 20</span>
+                                    <h2 className="text-2xl font-black text-slate-900 mb-8 leading-tight">{QUESTIONS[currentQ].text}</h2>
+                                    <div className="flex flex-col gap-3 mt-auto mb-auto">
+                                        {QUESTIONS[currentQ].type === 'freetext' ? (
+                                            <div className="space-y-4">
+                                                <textarea value={freeText} onChange={(e) => setFreeText(e.target.value)} placeholder="Napiš to sem..." className="w-full p-4 border-2 border-slate-100 rounded-2xl focus:border-orange-500 h-32 resize-none outline-none transition-all" />
+                                                <button onClick={() => handleAnswer('FREETEXT')} disabled={!freeText.trim()} className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl disabled:bg-slate-200 active:scale-95 transition-all">Vyhodnotit výsledky</button>
+                                            </div>
+                                        ) : (
+                                            QUESTIONS[currentQ].options.map((opt, i) => (
+                                                <button key={i} onClick={() => handleAnswer(opt.category)} className="quiz-option w-full text-left p-4 rounded-2xl border-2 border-slate-100 hover:border-orange-500 hover:bg-orange-50 transition-all font-semibold text-slate-700 active:scale-95 animate-slide-up" style={{animationDelay: i*50+'ms'}}>{opt.text}</button>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {step === 'loading' && (
+                            <div className="quiz-inner flex-1 flex flex-col items-center justify-center text-center animate-fade-in">
+                                <div className="relative mb-8">
+                                    <Icon name="loader" className="w-24 h-24 text-orange-500 opacity-20" />
+                                    <div className="absolute inset-0 flex items-center justify-center text-2xl font-black">{timeLeft}s</div>
+                                </div>
+                                <h2 className="text-2xl font-bold mb-4">Probíhá vyhodnocení</h2>
+                                <p className="text-slate-500 min-h-[4rem] text-lg italic">
+                                    {timeLeft > 20 ? "Dáváme dohromady tvůj psychologický profil. Vydrž, chlape..." : 
+                                     timeLeft > 10 ? "Právě teď je supr chvíle si pořádně loknout z hrnku." : 
+                                     "Už se to blíží borče!"}
+                                </p>
+                            </div>
+                        )}
+
+                        {step === 'result' && (
+                            <div className="quiz-inner flex-1 flex flex-col overflow-y-auto hide-scrollbar animate-fade-in">
+                                <div className="text-center mb-10">
+                                    <Icon name={profile.icon} className={`w-16 h-16 mx-auto mb-4 ${profile.color}`} />
+                                    <span className="text-xs font-black uppercase tracking-widest text-orange-500">Tvůj Archetyp</span>
+                                    <h1 className="font-display-kpb text-4xl font-black text-slate-900">{profile.title}</h1>
+                                </div>
+                                <div className="quiz-quote bg-slate-50 p-6 rounded-3xl mb-8 relative italic leading-relaxed text-slate-700 text-lg border-l-4 border-orange-500">
+                                    "{profile.text}"
+                                </div>
+                                
+                                {!done ? (
+                                    <div className="bg-white border-2 border-slate-100 p-6 rounded-3xl shadow-sm space-y-4">
+                                        <h3 className="font-bold flex items-center text-slate-800"><Icon name="mail" className="w-5 h-5 mr-2" /> Pošli si výsledky</h3>
+                                        <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="tvuj@email.cz" className="w-full p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 transition-all" />
+                                        <button onClick={()=>email.includes('@') && setDone(true)} className="btn-primary-kpb w-full bg-orange-500 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all">Odeslat na e-mail</button>
+                                    </div>
+                                ) : (
+                                    <div className="bg-green-50 p-6 rounded-3xl flex items-center text-green-700 animate-slide-up">
+                                        <Icon name="check" className="w-10 h-10 mr-4" />
+                                        <div><p className="font-bold">Odesláno!</p><p className="text-sm">Zkontroluj schránku i spam.</p></div>
+                                    </div>
+                                )}
+                                <button onClick={()=>window.location.reload()} className="mt-8 text-slate-400 font-bold uppercase tracking-widest text-xs hover:text-slate-900 transition-all">Zkusit znovu</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
