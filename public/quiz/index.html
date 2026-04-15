@@ -122,6 +122,7 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeXsj27RMOJGf4SMtNNgEZ2w0V-DNPfDiELpD1Ao3eQuDkQ8u9s1-sDcgEqAVlDlzL/exec";
 
         // Ikony pomocí SVG (náhrada za Lucide komponenty pro single-file stabilitu)
         const Icon = ({ name, className }) => {
@@ -245,7 +246,7 @@
                 { text: "Drahá ztráta krupice. Už se to nesmí stát.", category: "HUSTLER" },
                 { text: "Pořád to ve mně hlodá a bojím se opakování.", category: "SEEKER" }
             ]},
-            { id: 20, type: "freetext", text: "Co bys na sobě chtěl do roka nejvíc zlepit?" }
+            { id: 20, type: "freetext", text: "Co bys na sobě chtěl do roka nejvíc vyladit?" }
         ];
 
         const RESULTS = {
@@ -260,10 +261,12 @@
             const [currentQ, setCurrentQ] = useState(0);
             const [answers, setAnswers] = useState([]);
             const [freeText, setFreeText] = useState("");
-            const [timeLeft, setTimeLeft] = useState(30);
+            const [timeLeft, setTimeLeft] = useState(15);
             const [profile, setProfile] = useState(null);
             const [email, setEmail] = useState('');
             const [done, setDone] = useState(false);
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [submitError, setSubmitError] = useState('');
 
             useEffect(() => {
                 if (step === 'loading' && timeLeft > 0) {
@@ -284,6 +287,41 @@
                     const dominant = Object.entries(counts).reduce((a, b) => b[1] > a[1] ? b : a)[0];
                     setProfile(RESULTS[dominant]);
                     setStep('loading');
+                }
+            };
+
+            const submitResult = async () => {
+                if (!email.includes('@')) return;
+                if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR_WEB_APP_EXEC_URL_HERE")) {
+                    setSubmitError('Chybí URL Apps Scriptu. Vlož ji do APPS_SCRIPT_URL.');
+                    return;
+                }
+
+                setIsSubmitting(true);
+                setSubmitError('');
+
+                const payload = {
+                    timestamp: new Date().toISOString(),
+                    email,
+                    profile: profile?.title || '',
+                    freeText: freeText || '',
+                    answers,
+                    pageUrl: window.location.href,
+                    userAgent: navigator.userAgent
+                };
+
+                try {
+                    await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                    setDone(true);
+                } catch (err) {
+                    setSubmitError('Nepodařilo se odeslat. Zkus to prosím znovu.');
+                } finally {
+                    setIsSubmitting(false);
                 }
             };
 
@@ -335,8 +373,8 @@
                                 </div>
                                 <h2 className="text-2xl font-bold mb-4">Probíhá vyhodnocení</h2>
                                 <p className="text-slate-500 min-h-[4rem] text-lg italic">
-                                    {timeLeft > 20 ? "Dáváme dohromady tvůj psychologický profil. Vydrž, chlape..." : 
-                                     timeLeft > 10 ? "Právě teď je supr chvíle si pořádně loknout z hrnku." : 
+                                    {timeLeft > 10 ? "Dáváme dohromady tvůj psychologický profil. Vydrž, chlape..." : 
+                                     timeLeft > 5 ? "Právě teď je supr chvíle si pořádně loknout z hrnku." : 
                                      "Už se to blíží borče!"}
                                 </p>
                             </div>
@@ -357,12 +395,15 @@
                                     <div className="bg-white border-2 border-slate-100 p-6 rounded-3xl shadow-sm space-y-4">
                                         <h3 className="font-bold flex items-center text-slate-800"><Icon name="mail" className="w-5 h-5 mr-2" /> Pošli si výsledky</h3>
                                         <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="tvuj@email.cz" className="w-full p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 transition-all" />
-                                        <button onClick={()=>email.includes('@') && setDone(true)} className="btn-primary-kpb w-full bg-orange-500 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all">Odeslat na e-mail</button>
+                                        <button onClick={submitResult} disabled={isSubmitting || !email.includes('@')} className="btn-primary-kpb w-full bg-orange-500 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+                                            {isSubmitting ? 'Odesílám...' : 'Odeslat na e-mail'}
+                                        </button>
+                                        {submitError && <p className="text-sm text-red-600">{submitError}</p>}
                                     </div>
                                 ) : (
                                     <div className="bg-green-50 p-6 rounded-3xl flex items-center text-green-700 animate-slide-up">
                                         <Icon name="check" className="w-10 h-10 mr-4" />
-                                        <div><p className="font-bold">Odesláno!</p><p className="text-sm">Zkontroluj schránku i spam.</p></div>
+                                        <div><p className="font-bold">Odesláno!</p><p className="text-sm">Za rok zkontroluj schránku i spam.</p></div>
                                     </div>
                                 )}
                                 <button onClick={()=>window.location.reload()} className="mt-8 text-slate-400 font-bold uppercase tracking-widest text-xs hover:text-slate-900 transition-all">Zkusit znovu</button>
